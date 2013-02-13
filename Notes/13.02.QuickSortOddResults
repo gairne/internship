@@ -1,0 +1,47 @@
+Quick Sort produces odd results with Criterion:
+
+Single traversal should be quicker than double traversal with filter.
+Also, variance seems to be an issue
+
+Quicksort code inspired from: http://en.literateprograms.org/Quicksort_(Haskell)#chunk def:partition function
+
+[/5playpen/t-mmole/internship/benchmarks]
+[13:56] t-mmole@cam-05-unx:./quickSortCriterion
+warming up
+estimating clock resolution...
+mean is 2.671477 us (320001 iterations)
+found 2022 outliers among 319999 samples (0.6%)
+  2019 (0.6%) high severe
+estimating cost of a clock call...
+mean is 118.4785 ns (15 iterations)
+
+benchmarking quickSort/qs single 1000
+mean: 108.9437 us, lb 105.3531 us, ub 113.8671 us, ci 0.950
+std dev: 21.26852 us, lb 16.75538 us, ub 26.35387 us, ci 0.950
+found 22 outliers among 100 samples (22.0%)
+  21 (21.0%) high severe
+variance introduced by outliers: 93.638%
+variance is severely inflated by outliers
+
+benchmarking quickSort/qs single 10000
+mean: 2.763403 ms, lb 2.671223 ms, ub 2.845820 ms, ci 0.950
+std dev: 444.2142 us, lb 380.0291 us, ub 523.7610 us, ci 0.950
+found 7 outliers among 100 samples (7.0%)
+  7 (7.0%) low mild
+variance introduced by outliers: 91.488%
+variance is severely inflated by outliers
+
+benchmarking quickSort/qs dual 1000
+mean: 74.87892 us, lb 74.61756 us, ub 75.05400 us, ci 0.950
+std dev: 1.084269 us, lb 805.9419 ns, ub 1.644224 us, ci 0.950
+found 6 outliers among 100 samples (6.0%)
+  3 (3.0%) low severe
+  3 (3.0%) low mild
+variance introduced by outliers: 7.523%
+variance is slightly inflated by outliers
+
+benchmarking quickSort/qs dual 10000
+mean: 834.8228 us, lb 829.2158 us, ub 840.4579 us, ci 0.950
+std dev: 28.90756 us, lb 25.82525 us, ub 32.81248 us, ci 0.950
+variance introduced by outliers: 30.666%
+variance is moderately inflated by outliers

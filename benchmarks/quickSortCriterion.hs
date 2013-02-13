@@ -14,9 +14,17 @@ quickSortDT (p:xs) = quickSortDT low ++ [p] ++ quickSortDT high
 -- quickSort with single traversal
 quickSortST :: Ord a => [a] -> [a]
 quickSortST [] = []
-quickSortST (p:xs) = quickSortST (fst split) ++ [p] ++ quickSortST (snd split)
+quickSortST (p:xs) = quickSortST low ++ [p] ++ quickSortST high
   where
-  split = partition (<p) xs
+--partition call is slow!  (low, high) = partition (<p) xs
+  (low,high) = myPartition p xs ([],[])
+
+myPartition :: Ord a => a -> [a] -> ([a], [a]) -> ([a], [a])
+myPartition _ [] (l,h) = (l,h)
+myPartition p (x:xs) (l,h)
+    | x > p = myPartition p xs (l , x:h)
+    | x <= p = myPartition p xs (x:l, h)
+    | otherwise = (l,h)
 
 main = do
     seed <- newStdGen
