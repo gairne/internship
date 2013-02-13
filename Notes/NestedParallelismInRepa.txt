@@ -1,0 +1,115 @@
+Nested Parallelism coerced into Sequential Outer Loop, Parallel Inner Loop
+==========================================================================
+
+It might be desirable to:
+mapP f $ ... $ mapP g xs
+
+Currently Repa warns about this kind of usage and enforces a sequential inner loop:
+"When one parallel computation invokes another it is nested parallelism which Repa does not
+support. Our current implementation will print a warning to stderr and then run the inner
+computeP sequentially."
+
+This is undesirable and has caused a lot of people's programs to run very slowly.
+
+The 'solution' is to force computation on the inner loop so that we have a single level of
+parallelism:
+arr `deepSeqArray` computeP $ map f arr
+
+Case Studies:
+-------------
+
+1) http://www.haskell.org/haskellwiki/Talk:Numeric_Haskell:_A_Repa_Tutorial
+
+Problem: Abysmal performance.
+A simulation with multiple frames (no code).
+Wanted to produce a series of arrays with clear defined intermediate steps. These arrays are
+eventually folded.
+
+Solution: Uses force after every step to improve performance. 'Force's introduces parallelism
+but is lazy so we must use deepSeqArray to ensure the force is evaluated.
+
+At the cost of potential loop fusion. Especially because the operations on intermediate arrays
+were additions and multiplications.
+
+2) http://stackoverflow.com/questions/6300428/poor-performance-with-transpose-and-cumulative-sum-in-repa
+
+Problem: Individually operations take <1s but composed take >=30s
+Performs operations like transpositions and cumulative sums on an image (1920x1080).
+Some code provided.
+Compositions in the form of cumsum $ transpose $ transpose x. An opportunity for nested
+parallelism?
+
+Solution: 'Force' with 'deepSeqArray' to aid the compiler/optimiser to move some things out
+of a tight loop to prevent redundant calculation.
+
+3) https://groups.google.com/forum/?fromgroups#!searchin/haskell-cafe/repa/haskell-cafe/9wS2dEylLGY/Cj2XPmZI9y4J
+
+Problem:
+Traversing / repeating operations on a 2D array millions of times.
+Author concerned that computeP (forcing evaluation) every iteration seems expensive.
+Trade off between redundant calculation and repeated allocation and GC. (We might have done
+more fusion).
+
+Solution: Author didn't reply to give any information or feedback.
+
+4) http://www.tapdancinggoats.com/haskell-life-repa.htm (Conway's game of life)
+
+Problem: """Repa doesn’t support nested parallel computations, so to make sure each parallel
+calculation is complete before the next one starts, the parallel versions of repa’s
+calculation functions are monadic."""
+
+Solution: Same as above. Force computation between each iteration.
+
+5) From the Problem based benchmark suite: https://www.cs.cmu.edu/~pbbs/benchmarks.html
+
+Quick Sort
+
+quickSort :: Ord a => [a] -> [a]
+quickSort [] = []
+quickSort (p:xs) = quickSort low ++ [p] ++ quickSort high
+  where
+  low = filter (<p) xs
+  high = filter (>=p) xs
+
+-- Cannot be done in Repa as there is no filter. Filter leads to irregular arrays.
+-- Would be very nice to filter in parallel.
+
+Could potentially be done if rather then filtering out non-matching items, you replace them
+with some null value:
+filterP :: (Int -> Bool) -> Array U DIM1 Int -> Array U DIM1 Int
+filterP f xs = unsafePerformIO $ computeP $ R.map (\x -> if (f x) then x else 0) xs
+
+Some problems are impossible (or require severe work arounds) in Repa
+=====================================================================
+
+Some of these Repa really should handle as they are fast single actions on regular arrays.
+
+Anything involving divide and conquer is very hard to do in Repa.
+
+X) Missing 'filter'
+
+Problem: Quicksort relies on filter in order to produce a new array for either the low
+(< pivot) or high (>= pivot) portions of the list.
+
+Solution: A nasty workaround would be to use a new type of filter that replaces non matching
+elements with a null value. These values can be stripped out or ignored later, but will incur
+traversal and comparison costs.
+
+Y) Trees
+Problem: A tree traversal can only be worked on by Repa if:
+  *) It is flattened
+  *) The same operation is being applied on nodes using map et al. (NB: filter doesn't work)
+
+An aside:
+
+Z) https://groups.google.com/forum/?fromgroups#!searchin/haskell-cafe/repa/haskell-cafe/rU2eejZHy_U/UD66yWV_D1EJ
+
+Problem: Sparse Matrix (irregular arrays) desired in Repa.
+
+"""
+As I investigate the structures for 
+organizing a library of sparse matrix representations a bit more and look 
+into the repa 3 library, I cant help but wonder if these spare matrix types 
+could just be additional instances of Source and Target in repa. Does anyone 
+know of any reason why this would be a bad idea?
+"""

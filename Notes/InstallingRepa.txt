@@ -1,0 +1,232 @@
+Directly through Hackage:
+
+[~/repa-3.2.3.1]
+[10:10] t-mmole@cam-05-unx:runhaskell Setup configure --prefix=/home/t-mmole/ghc/
+Configuring repa-3.2.3.1...
+Setup: At least the following dependencies are missing:
+QuickCheck >=2.3 && <2.6,
+base ==4.6.*,
+template-haskell ==2.8.*,
+vector ==0.10.*
+
+[~/base-4.6.0.1]
+[10:10] t-mmole@cam-05-unx:runhaskell Setup configure --prefix=/home/t-mmole/ghc/
+
+Top level:
+    attempting to use module `Prelude' (./Prelude.hs) which is not loaded
+
+[~/vector-0.10.0.1]
+[10:11] t-mmole@cam-05-unx:runhaskell Setup configure --prefix=/home/t-mmole/ghc/
+Configuring vector-0.10.0.1...
+Setup: At least the following dependencies are missing:
+primitive >=0.5.0.1 && <0.6
+
+[~/QuickCheck-2.5.1.1]
+[10:11] t-mmole@cam-05-unx:runhaskell Setup configure --prefix=/home/t-mmole/ghc/
+Configuring QuickCheck-2.5.1.1...
+Setup: At least the following dependencies are missing:
+random -any
+
+[~/template-haskell-2.8.0.0]
+[10:11] t-mmole@cam-05-unx:runhaskell Setup configure --prefix=/home/t-mmole/ghc/
+Configuring template-haskell-2.8.0.0...
+
+===============================================
+
+Using cabal:
+
+which ghc: /home/t-mmole/ghc/bin/ghc
+(The Glorious Glasgow Haskell Compilation System, version 7.7.20130207)
+
+[~]
+[09:51] t-mmole@cam-05-unx:cabal update
+Config file path source is default config file.
+Config file /home/t-mmole/.cabal/config not found.
+Writing default configuration to /home/t-mmole/.cabal/config
+Downloading the latest package list from hackage.haskell.org
+
+[~]
+[09:52] t-mmole@cam-05-unx:vim .cabal/config
+
+[~]
+[09:57] t-mmole@cam-05-unx:cabal install repa
+Resolving dependencies...
+cabal: Could not resolve dependencies:
+trying: repa-3.2.3.1 (user goal)
+next goal: base (dependency of repa-3.2.3.1)
+rejecting: base-3.0.3.2, 3.0.3.1 (global constraint requires installed
+instance)
+rejecting: base-4.7.0.0/installed-331... (conflict: repa => base==4.6.*)
+rejecting: base-4.6.0.1, 4.6.0.0, 4.5.1.0, 4.5.0.0, 4.4.1.0, 4.4.0.0, 4.3.1.0,
+4.3.0.0, 4.2.0.2, 4.2.0.1, 4.2.0.0, 4.1.0.0, 4.0.0.0 (global constraint
+requires installed instance)
+
+which ghc: /usr/bin/ghc
+(The Glorious Glasgow Haskell Compilation System, version 7.4.1)
+
+[~]
+[10:00] t-mmole@cam-05-unx:cabal install repa
+Resolving dependencies...
+Configuring bytestring-0.10.0.1...
+Building bytestring-0.10.0.1...
+Preprocessing library bytestring-0.10.0.1...
+[ 1 of 19] Compiling Data.ByteString.Lazy.Builder.BasicEncoding.Internal.UncheckedShifts ( Data/ByteString/Lazy/Builder/BasicEncoding/Internal/UncheckedShifts.hs, dist/build/Data/ByteString/Lazy/Builder/BasicEncoding/Internal/UncheckedShifts.o )
+[ 2 of 19] Compiling Data.ByteString.Lazy.Builder.BasicEncoding.Internal ( Data/ByteString/Lazy/Builder/BasicEncoding/Internal.hs, dist/build/Data/ByteString/Lazy/Builder/BasicEncoding/Internal.o )
+[ 3 of 19] Compiling Data.ByteString.Lazy.Builder.BasicEncoding.Internal.Floating ( Data/ByteString/Lazy/Builder/BasicEncoding/Internal/Floating.hs, dist/build/Data/ByteString/Lazy/Builder/BasicEncoding/Internal/Floating.o )
+[ 4 of 19] Compiling Data.ByteString.Lazy.Builder.BasicEncoding.Binary ( Data/ByteString/Lazy/Builder/BasicEncoding/Binary.hs, dist/build/Data/ByteString/Lazy/Builder/BasicEncoding/Binary.o )
+[ 5 of 19] Compiling Data.ByteString.Internal ( Data/ByteString/Internal.hs, dist/build/Data/ByteString/Internal.o )
+[ 6 of 19] Compiling Data.ByteString.Unsafe ( Data/ByteString/Unsafe.hs, dist/build/Data/ByteString/Unsafe.o )
+[ 7 of 19] Compiling Data.ByteString  ( Data/ByteString.hs, dist/build/Data/ByteString.o )
+[ 8 of 19] Compiling Data.ByteString.Char8 ( Data/ByteString/Char8.hs, dist/build/Data/ByteString/Char8.o )
+[ 9 of 19] Compiling Data.ByteString.Lazy.Internal ( Data/ByteString/Lazy/Internal.hs, dist/build/Data/ByteString/Lazy/Internal.o )
+[10 of 19] Compiling Data.ByteString.Lazy ( Data/ByteString/Lazy.hs, dist/build/Data/ByteString/Lazy.o )
+[11 of 19] Compiling Data.ByteString.Lazy.Char8 ( Data/ByteString/Lazy/Char8.hs, dist/build/Data/ByteString/Lazy/Char8.o )
+[12 of 19] Compiling Data.ByteString.Lazy.Builder.Internal ( Data/ByteString/Lazy/Builder/Internal.hs, dist/build/Data/ByteString/Lazy/Builder/Internal.o )
+[13 of 19] Compiling Data.ByteString.Lazy.Builder.BasicEncoding.Internal.Base16 ( Data/ByteString/Lazy/Builder/BasicEncoding/Internal/Base16.hs, dist/build/Data/ByteString/Lazy/Builder/BasicEncoding/Internal/Base16.o )
+[14 of 19] Compiling Data.ByteString.Lazy.Builder.BasicEncoding.ASCII ( Data/ByteString/Lazy/Builder/BasicEncoding/ASCII.hs, dist/build/Data/ByteString/Lazy/Builder/BasicEncoding/ASCII.o )
+[15 of 19] Compiling Data.ByteString.Lazy.Builder.BasicEncoding ( Data/ByteString/Lazy/Builder/BasicEncoding.hs, dist/build/Data/ByteString/Lazy/Builder/BasicEncoding.o )
+[16 of 19] Compiling Data.ByteString.Lazy.Builder.ASCII ( Data/ByteString/Lazy/Builder/ASCII.hs, dist/build/Data/ByteString/Lazy/Builder/ASCII.o )
+[17 of 19] Compiling Data.ByteString.Lazy.Builder ( Data/ByteString/Lazy/Builder.hs, dist/build/Data/ByteString/Lazy/Builder.o )
+[18 of 19] Compiling Data.ByteString.Lazy.Builder.Extras ( Data/ByteString/Lazy/Builder/Extras.hs, dist/build/Data/ByteString/Lazy/Builder/Extras.o )
+[19 of 19] Compiling Data.ByteString.Lazy.Builder.BasicEncoding.Extras ( Data/ByteString/Lazy/Builder/BasicEncoding/Extras.hs, dist/build/Data/ByteString/Lazy/Builder/BasicEncoding/Extras.o )
+Registering bytestring-0.10.0.1...
+Installing library in
+/home/t-mmole/ghc/cabal/lib/bytestring-0.10.0.1/ghc-7.4.1
+Registering bytestring-0.10.0.1...
+Downloading primitive-0.5.0.1...
+Configuring primitive-0.5.0.1...
+Building primitive-0.5.0.1...
+Preprocessing library primitive-0.5.0.1...
+[ 1 of 10] Compiling Data.Primitive.Internal.Compat ( Data/Primitive/Internal/Compat.hs, dist/build/Data/Primitive/Internal/Compat.o )
+[ 2 of 10] Compiling Data.Primitive.MachDeps ( Data/Primitive/MachDeps.hs, dist/build/Data/Primitive/MachDeps.o )
+[ 3 of 10] Compiling Data.Primitive.Internal.Operations ( Data/Primitive/Internal/Operations.hs, dist/build/Data/Primitive/Internal/Operations.o )
+[ 4 of 10] Compiling Control.Monad.Primitive ( Control/Monad/Primitive.hs, dist/build/Control/Monad/Primitive.o )
+[ 5 of 10] Compiling Data.Primitive.Types ( Data/Primitive/Types.hs, dist/build/Data/Primitive/Types.o )
+[ 6 of 10] Compiling Data.Primitive.Array ( Data/Primitive/Array.hs, dist/build/Data/Primitive/Array.o )
+[ 7 of 10] Compiling Data.Primitive.ByteArray ( Data/Primitive/ByteArray.hs, dist/build/Data/Primitive/ByteArray.o )
+[ 8 of 10] Compiling Data.Primitive.Addr ( Data/Primitive/Addr.hs, dist/build/Data/Primitive/Addr.o )
+[ 9 of 10] Compiling Data.Primitive   ( Data/Primitive.hs, dist/build/Data/Primitive.o )
+[10 of 10] Compiling Data.Primitive.MutVar ( Data/Primitive/MutVar.hs, dist/build/Data/Primitive/MutVar.o )
+Registering primitive-0.5.0.1...
+Installing library in /home/t-mmole/ghc/cabal/lib/primitive-0.5.0.1/ghc-7.4.1
+Registering primitive-0.5.0.1...
+Downloading vector-0.10.0.1...
+Configuring vector-0.10.0.1...
+Building vector-0.10.0.1...
+Preprocessing library vector-0.10.0.1...
+[ 1 of 19] Compiling Data.Vector.Storable.Internal ( Data/Vector/Storable/Internal.hs, dist/build/Data/Vector/Storable/Internal.o )
+[ 2 of 19] Compiling Data.Vector.Fusion.Util ( Data/Vector/Fusion/Util.hs, dist/build/Data/Vector/Fusion/Util.o )
+[ 3 of 19] Compiling Data.Vector.Fusion.Stream.Size ( Data/Vector/Fusion/Stream/Size.hs, dist/build/Data/Vector/Fusion/Stream/Size.o )
+
+Data/Vector/Fusion/Stream/Size.hs:25:10:
+    Warning: No explicit method nor default method for `*'
+    In the instance declaration for `Num Size'
+
+Data/Vector/Fusion/Stream/Size.hs:25:10:
+    Warning: No explicit method nor default method for `abs'
+    In the instance declaration for `Num Size'
+
+Data/Vector/Fusion/Stream/Size.hs:25:10:
+    Warning: No explicit method nor default method for `signum'
+    In the instance declaration for `Num Size'
+[ 4 of 19] Compiling Data.Vector.Internal.Check ( Data/Vector/Internal/Check.hs, dist/build/Data/Vector/Internal/Check.o )
+[ 5 of 19] Compiling Data.Vector.Fusion.Stream.Monadic ( Data/Vector/Fusion/Stream/Monadic.hs, dist/build/Data/Vector/Fusion/Stream/Monadic.o )
+Loading package ghc-prim ... linking ... done.
+Loading package integer-gmp ... linking ... done.
+Loading package base ... linking ... done.
+Loading package primitive-0.5.0.1 ... linking ... done.
+Loading package array-0.4.0.0 ... linking ... done.
+Loading package deepseq-1.3.0.0 ... linking ... done.
+[ 6 of 19] Compiling Data.Vector.Fusion.Stream ( Data/Vector/Fusion/Stream.hs, dist/build/Data/Vector/Fusion/Stream.o )
+[ 7 of 19] Compiling Data.Vector.Generic.Mutable ( Data/Vector/Generic/Mutable.hs, dist/build/Data/Vector/Generic/Mutable.o )
+[ 8 of 19] Compiling Data.Vector.Generic.Base ( Data/Vector/Generic/Base.hs, dist/build/Data/Vector/Generic/Base.o )
+[ 9 of 19] Compiling Data.Vector.Generic.New ( Data/Vector/Generic/New.hs, dist/build/Data/Vector/Generic/New.o )
+[10 of 19] Compiling Data.Vector.Generic ( Data/Vector/Generic.hs, dist/build/Data/Vector/Generic.o )
+[11 of 19] Compiling Data.Vector.Primitive.Mutable ( Data/Vector/Primitive/Mutable.hs, dist/build/Data/Vector/Primitive/Mutable.o )
+[12 of 19] Compiling Data.Vector.Primitive ( Data/Vector/Primitive.hs, dist/build/Data/Vector/Primitive.o )
+[13 of 19] Compiling Data.Vector.Storable.Mutable ( Data/Vector/Storable/Mutable.hs, dist/build/Data/Vector/Storable/Mutable.o )
+[14 of 19] Compiling Data.Vector.Storable ( Data/Vector/Storable.hs, dist/build/Data/Vector/Storable.o )
+[15 of 19] Compiling Data.Vector.Unboxed.Base ( Data/Vector/Unboxed/Base.hs, dist/build/Data/Vector/Unboxed/Base.o )
+[16 of 19] Compiling Data.Vector.Unboxed ( Data/Vector/Unboxed.hs, dist/build/Data/Vector/Unboxed.o )
+[17 of 19] Compiling Data.Vector.Unboxed.Mutable ( Data/Vector/Unboxed/Mutable.hs, dist/build/Data/Vector/Unboxed/Mutable.o )
+[18 of 19] Compiling Data.Vector.Mutable ( Data/Vector/Mutable.hs, dist/build/Data/Vector/Mutable.o )
+[19 of 19] Compiling Data.Vector      ( Data/Vector.hs, dist/build/Data/Vector.o )
+Registering vector-0.10.0.1...
+Installing library in /home/t-mmole/ghc/cabal/lib/vector-0.10.0.1/ghc-7.4.1
+Registering vector-0.10.0.1...
+Downloading repa-3.2.2.201204.1...
+Configuring repa-3.2.2.201204.1...
+Building repa-3.2.2.201204.1...
+Preprocessing library repa-3.2.2.201204.1...
+[ 1 of 38] Compiling Data.Array.Repa.Stencil.Partition ( Data/Array/Repa/Stencil/Partition.hs, dist/build/Data/Array/Repa/Stencil/Partition.o )
+[ 2 of 38] Compiling Data.Array.Repa.Eval.Elt ( Data/Array/Repa/Eval/Elt.hs, dist/build/Data/Array/Repa/Eval/Elt.o )
+[ 3 of 38] Compiling Data.Array.Repa.Shape ( Data/Array/Repa/Shape.hs, dist/build/Data/Array/Repa/Shape.o )
+[ 4 of 38] Compiling Data.Array.Repa.Base ( Data/Array/Repa/Base.hs, dist/build/Data/Array/Repa/Base.o )
+[ 5 of 38] Compiling Data.Array.Repa.Eval.Target ( Data/Array/Repa/Eval/Target.hs, dist/build/Data/Array/Repa/Eval/Target.o )
+[ 6 of 38] Compiling Data.Array.Repa.Eval.Load ( Data/Array/Repa/Eval/Load.hs, dist/build/Data/Array/Repa/Eval/Load.o )
+[ 7 of 38] Compiling Data.Array.Repa.Repr.HintSmall ( Data/Array/Repa/Repr/HintSmall.hs, dist/build/Data/Array/Repa/Repr/HintSmall.o )
+[ 8 of 38] Compiling Data.Array.Repa.Index ( Data/Array/Repa/Index.hs, dist/build/Data/Array/Repa/Index.o )
+[ 9 of 38] Compiling Data.Array.Repa.Slice ( Data/Array/Repa/Slice.hs, dist/build/Data/Array/Repa/Slice.o )
+[10 of 38] Compiling Data.Array.Repa.Stencil.Base ( Data/Array/Repa/Stencil/Base.hs, dist/build/Data/Array/Repa/Stencil/Base.o )
+[11 of 38] Compiling Data.Array.Repa.Stencil.Template ( Data/Array/Repa/Stencil/Template.hs, dist/build/Data/Array/Repa/Stencil/Template.o )
+[12 of 38] Compiling Data.Array.Repa.Eval.Gang ( Data/Array/Repa/Eval/Gang.hs, dist/build/Data/Array/Repa/Eval/Gang.o )
+[13 of 38] Compiling Data.Array.Repa.Eval.Reduction ( Data/Array/Repa/Eval/Reduction.hs, dist/build/Data/Array/Repa/Eval/Reduction.o )
+[14 of 38] Compiling Data.Array.Repa.Eval.Selection ( Data/Array/Repa/Eval/Selection.hs, dist/build/Data/Array/Repa/Eval/Selection.o )
+[15 of 38] Compiling Data.Array.Repa.Eval.Cursored ( Data/Array/Repa/Eval/Cursored.hs, dist/build/Data/Array/Repa/Eval/Cursored.o )
+[16 of 38] Compiling Data.Array.Repa.Eval.Chunked ( Data/Array/Repa/Eval/Chunked.hs, dist/build/Data/Array/Repa/Eval/Chunked.o )
+[17 of 38] Compiling Data.Array.Repa.Repr.Delayed ( Data/Array/Repa/Repr/Delayed.hs, dist/build/Data/Array/Repa/Repr/Delayed.o )
+[18 of 38] Compiling Data.Array.Repa.Operators.Traversal ( Data/Array/Repa/Operators/Traversal.hs, dist/build/Data/Array/Repa/Operators/Traversal.o )
+[19 of 38] Compiling Data.Array.Repa.Operators.IndexSpace ( Data/Array/Repa/Operators/IndexSpace.hs, dist/build/Data/Array/Repa/Operators/IndexSpace.o )
+[20 of 38] Compiling Data.Array.Repa.Unsafe ( Data/Array/Repa/Unsafe.hs, dist/build/Data/Array/Repa/Unsafe.o )
+[21 of 38] Compiling Data.Array.Repa.Operators.Interleave ( Data/Array/Repa/Operators/Interleave.hs, dist/build/Data/Array/Repa/Operators/Interleave.o )
+[22 of 38] Compiling Data.Array.Repa.Repr.ByteString ( Data/Array/Repa/Repr/ByteString.hs, dist/build/Data/Array/Repa/Repr/ByteString.o )
+[23 of 38] Compiling Data.Array.Repa.Repr.ForeignPtr ( Data/Array/Repa/Repr/ForeignPtr.hs, dist/build/Data/Array/Repa/Repr/ForeignPtr.o )
+[24 of 38] Compiling Data.Array.Repa.Eval.Interleaved ( Data/Array/Repa/Eval/Interleaved.hs, dist/build/Data/Array/Repa/Eval/Interleaved.o )
+[25 of 38] Compiling Data.Array.Repa.Eval ( Data/Array/Repa/Eval.hs, dist/build/Data/Array/Repa/Eval.o )
+[26 of 38] Compiling Data.Array.Repa.Repr.Partitioned ( Data/Array/Repa/Repr/Partitioned.hs, dist/build/Data/Array/Repa/Repr/Partitioned.o )
+[27 of 38] Compiling Data.Array.Repa.Repr.Unboxed ( Data/Array/Repa/Repr/Unboxed.hs, dist/build/Data/Array/Repa/Repr/Unboxed.o )
+[28 of 38] Compiling Data.Array.Repa.Operators.Selection ( Data/Array/Repa/Operators/Selection.hs, dist/build/Data/Array/Repa/Operators/Selection.o )
+[29 of 38] Compiling Data.Array.Repa.Repr.Undefined ( Data/Array/Repa/Repr/Undefined.hs, dist/build/Data/Array/Repa/Repr/Undefined.o )
+[30 of 38] Compiling Data.Array.Repa.Repr.Cursored ( Data/Array/Repa/Repr/Cursored.hs, dist/build/Data/Array/Repa/Repr/Cursored.o )
+[31 of 38] Compiling Data.Array.Repa.Specialised.Dim2 ( Data/Array/Repa/Specialised/Dim2.hs, dist/build/Data/Array/Repa/Specialised/Dim2.o )
+[32 of 38] Compiling Data.Array.Repa.Stencil.Dim2 ( Data/Array/Repa/Stencil/Dim2.hs, dist/build/Data/Array/Repa/Stencil/Dim2.o )
+[33 of 38] Compiling Data.Array.Repa.Repr.Vector ( Data/Array/Repa/Repr/Vector.hs, dist/build/Data/Array/Repa/Repr/Vector.o )
+[34 of 38] Compiling Data.Array.Repa.Repr.HintInterleave ( Data/Array/Repa/Repr/HintInterleave.hs, dist/build/Data/Array/Repa/Repr/HintInterleave.o )
+[35 of 38] Compiling Data.Array.Repa.Operators.Mapping ( Data/Array/Repa/Operators/Mapping.hs, dist/build/Data/Array/Repa/Operators/Mapping.o )
+[36 of 38] Compiling Data.Array.Repa.Operators.Reduction ( Data/Array/Repa/Operators/Reduction.hs, dist/build/Data/Array/Repa/Operators/Reduction.o )
+[37 of 38] Compiling Data.Array.Repa  ( Data/Array/Repa.hs, dist/build/Data/Array/Repa.o )
+[38 of 38] Compiling Data.Array.Repa.Stencil ( Data/Array/Repa/Stencil.hs, dist/build/Data/Array/Repa/Stencil.o )
+Registering repa-3.2.2.201204.1...
+Installing library in
+/home/t-mmole/ghc/cabal/lib/repa-3.2.2.201204.1/ghc-7.4.1
+Registering repa-3.2.2.201204.1...
+
+[~]
+[10:19] t-mmole@cam-05-unx:ghci
+GHCi, version 7.4.1: http://www.haskell.org/ghc/  :? for help
+Loading package ghc-prim ... linking ... done.
+Loading package integer-gmp ... linking ... done.
+Loading package base ... linking ... done.
+Prelude> import Data.Array.Repa
+Prelude Data.Array.Repa>
+Leaving GHCi.
+
+===============================================
+Conclusion:
+
+A lot of libraries will not build against HEAD.
+Instead use ghc version 4.1, standard version on cam-05-unx.
+
+Cabal installs locally. I have modified ~/.cabal/config to:
+
+install-dirs user
+  prefix: /home/t-mmole/ghc/cabal
+  -- bindir: $prefix/bin
+  -- libdir: $prefix/lib
+  -- libsubdir: $pkgid/$compiler
+  -- libexecdir: $prefix/libexec
+  -- datadir: $prefix/share
+  -- datasubdir: $pkgid
+  -- docdir: $datadir/doc/$pkgid
+  -- htmldir: $docdir/html
+  -- haddockdir: $htmldir

@@ -1,0 +1,109 @@
+Blelloch (89) introduced code and data structure transformation to flatten nested data structures
+into one flat representation suitable for execution on parallel hardware.
+Segment values are used to partition data structure and allow the recovery of the original
+structure.
+It is limited to unboxed types / primitives.
+
+---
+
+Parallel arrays in Haskell are similar to lists in that they are a sequence of items that can
+be operated on in parallel. Parallel operations such as mapP are provided.
+
+---
+
+Chak00 extended flattening for Haskell and ML.
+Some notes:
+ 1) Parallel arrays of complex types are represented differently:
+  - An array of pairs is represented as a pair of arrays
+  - Nested arrays are represented as a single flat array with segment values
+
+---
+
+Data Parallel Haskell is an extension to Haskell that introduces these Parallel Arrays with
+the [: k :] syntax.
+The arrays are not lazy in the sense that demand for one element causes all to be evaluated.
+Arrays can hold any type, including functions and other arrays.
+Arrays are flat (and are flattened like Blelloch with a segment value).
+
+Parallelism achieved by:
+ (1) Removing syntactic sugar
+ (2) Vectorising - converting nested data parallelism into flat data parallelism
+     Chak00 says this consists of lifting functions into parallel alternatives (vectorisation)
+       and then flattening data structures (specialisation)
+ (3) Fusion - optimisation
+ (4) Gang Parallelism - Divide work into chunks that will be executed by a gang of threads
+
+During (2), arrays of the form [: a :] are converted to a concrete, non-parametric form.
+  i.e. [: Int :] -> PA Int
+Since the type PA is common (PA Int, PA Bool, PA (Int, Int)), we introduce a class with
+common functions. A parameterised class is OK, as it is the data type that is concrete.
+
+class PAElem a where
+  data PA a
+  indexPA :: ...
+  lengthPA :: ...
+  ...
+
+These common functions can be generalised and are instanced by each concrete data type.
+
+Specifically of interest to me, Nested Arrays are represented:
+
+class PAElem a => PAElem (PA a) where
+  data PA (PA a) = AArr (PA a) (PA (Int, Int))
+  ..
+
+That is to say, a nested array with the underlying leaf data type being of type 'a' (which is
+also a instance of PAElem). In the AArr constructor, PA a is the underlying data values
+flattened and PA (Int, Int) is the segment value (start, extent).
+
+e.g.
+
+[: [: 1, 3, 4, 5 :], [::], [: 1 :] :]
+
+AArr [1, 3, 4, 5, 1] (ATup2 [0, 4, 4] [4, 0, 1])
+
+---
+
+Repa tackles parallelism differently. It tackles multi-dimensional arrays (NB: but doesn't
+tackle nested arrays with jagged edges)
+
+Array elements are single, unboxed values.
+
+It introduces a new syntax to refer to multi-dimensional arrays in a pattern matching general
+way:
+
+(Z) or DIM0
+(Z :. Int) or DIM0 :. Int or DIM1
+(Z :. Int :. Int) or DIM1 :. Int or DIM2 
+...
+
+e.g.
+(Z :. x :. y :. z) = x * y * z
+
+At-least rank operations supported:
+(Z :. dims :. z) = ...
+
+Arrays can be delayed to support fusion, or manifest with forced values to support single
+computation multiple use.
+
+Repa v3 introduced different type of arrays and improved on the manifest and delayed arrays
+intuitiveness. It was also found that small parallel work should be kept to a sequential as
+the cost of thread scheduling is too large.
+
+---
+
+Our goal is to bypass the Blelloch flattening mechanism and instead using Lazy Tree Splitting
+to split the work up
+
+Parallel arrays are represented as ropes (balanced binary trees).
+Nodes do not hold data, all values are stored on the leaves.
+
+Tree is split up for parallelism.
+
+Eager Tree Splitting splits the tree into equal parts but this may yield poor performance if
+workloads end up being unequal.
+Lazy Tree Splitting uses a work stealing principle, the idea being you should only split work
+up if others need it.
+
+Idea hinges on context. A context is a parent node that is either Top, CatL (where the left
+subtree is still being processed) or CatR (where the left subtree is fully processed)
