@@ -1,0 +1,96 @@
+DPH Notes:
+
+1) Gotchas
+
+Do not use $:
+
+incsum :: [:Int:] -> Int
+incsum xs = sumP(mapP (PI.+ 1) xs)
+...works
+
+incsum :: [:Int:] -> Int
+incsum xs = sumP= $ mapP (PI.+ 1) xs
+...does not.
+
+[/5playpen/t-mmole/internship/benchmarks]
+[11:58] t-mmole@cam-05-unx:ghc -c -Odph simplestDPH.hs
+exprType TYPE ghc-prim:GHC.Types.Int{(w) tc 3J}
+*** Vectorisation error ***
+    Variable not vectorised: GHC.Base.$
+
+vs.
+
+[/5playpen/t-mmole/internship/benchmarks]
+[11:58] t-mmole@cam-05-unx:ghc -c -Odph simplestDPH.hs
+exprType TYPE ghc-prim:GHC.Types.Int{(w) tc 3J}
+exprType TYPE ghc-prim:GHC.Types.Int{(w) tc 3J}
+
+2) Need pragmas:
+
+{-# LANGUAGE ParallelArrays #-}
+{-# OPTIONS_GHC -fvectorise #-}
+
+sometimes {-# NOINLINE incsumW #-} is useful.
+
+3) Separate Vectorised from Non-vectorised:
+
+*** Vectorisation error ***
+    Tycon not vectorised:  GHC.Prim.RealWorld
+
+indicates that perhaps you need to move your vectorised code into another module and import it and surround with NOINLINE
+
+e.g.:
+===============
+
+{-# LANGUAGE ParallelArrays #-}
+{-# OPTIONS_GHC -fvectorise #-}
+
+import Data.Array.Parallel
+import Data.Array.Parallel.Prelude
+import Data.Array.Parallel.Prelude.Int as PI
+import Data.Array.Parallel.PArray as PA
+
+incsum :: [:Int:] -> Int
+incsum xs = sumP(mapP (PI.+ 1) xs)
+
+incsumW :: PArray Int -> Int
+{-# NOINLINE incsumW #-}
+incsumW xs = incsum (fromPArrayP xs)
+
+main = let result = incsumW (PA.fromList [1,2,3,4,5,6,7,8,9,10])
+       in print result
+
+=============== splits down into
+
+{-# LANGUAGE ParallelArrays #-}
+{-# OPTIONS_GHC -fvectorise #-}
+
+module SimplestDPH (incsumW) where
+
+import Data.Array.Parallel
+import Data.Array.Parallel.Prelude
+import Data.Array.Parallel.Prelude.Int as PI
+
+incsum :: [:Int:] -> Int
+incsum xs = sumP(mapP (PI.+ 1) xs)
+
+incsumW :: PArray Int -> Int
+{-# NOINLINE incsumW #-}
+incsumW xs = incsum (fromPArrayP xs)
+
+=============== and 
+
+import Data.Array.Parallel
+import Data.Array.Parallel.PArray as PA
+
+import SimplestDPH
+
+main = let result = incsumW (PA.fromList [1,2,3,4,5,6,7,8,9,10])
+       in print result
+
+===============
+
+Compile as ghc --make -threaded -Odph simp...hs simp...Main.hs
+
+(BTW: module names must be Capitalised)
+
