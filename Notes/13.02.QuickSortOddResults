@@ -1,0 +1,108 @@
+Quick Sort produces odd results with Criterion:
+
+Single traversal should be quicker than double traversal with filter.
+Also, variance seems to be an issue
+
+Quicksort code inspired from: http://en.literateprograms.org/Quicksort_(Haskell)#chunk def:partition function
+
+[/5playpen/t-mmole/internship/benchmarks]
+[13:56] t-mmole@cam-05-unx:./quickSortCriterion
+warming up
+estimating clock resolution...
+mean is 2.671477 us (320001 iterations)
+found 2022 outliers among 319999 samples (0.6%)
+  2019 (0.6%) high severe
+estimating cost of a clock call...
+mean is 118.4785 ns (15 iterations)
+
+benchmarking quickSort/qs single 1000
+mean: 108.9437 us, lb 105.3531 us, ub 113.8671 us, ci 0.950
+std dev: 21.26852 us, lb 16.75538 us, ub 26.35387 us, ci 0.950
+found 22 outliers among 100 samples (22.0%)
+  21 (21.0%) high severe
+variance introduced by outliers: 93.638%
+variance is severely inflated by outliers
+
+benchmarking quickSort/qs single 10000
+mean: 2.763403 ms, lb 2.671223 ms, ub 2.845820 ms, ci 0.950
+std dev: 444.2142 us, lb 380.0291 us, ub 523.7610 us, ci 0.950
+found 7 outliers among 100 samples (7.0%)
+  7 (7.0%) low mild
+variance introduced by outliers: 91.488%
+variance is severely inflated by outliers
+
+benchmarking quickSort/qs dual 1000
+mean: 74.87892 us, lb 74.61756 us, ub 75.05400 us, ci 0.950
+std dev: 1.084269 us, lb 805.9419 ns, ub 1.644224 us, ci 0.950
+found 6 outliers among 100 samples (6.0%)
+  3 (3.0%) low severe
+  3 (3.0%) low mild
+variance introduced by outliers: 7.523%
+variance is slightly inflated by outliers
+
+benchmarking quickSort/qs dual 10000
+mean: 834.8228 us, lb 829.2158 us, ub 840.4579 us, ci 0.950
+std dev: 28.90756 us, lb 25.82525 us, ub 32.81248 us, ci 0.950
+variance introduced by outliers: 30.666%
+variance is moderately inflated by outliers
+
+
+==========================================================================
+
+By using 'nf' instead of 'whnf', the lazy thunks are being forced to be evaluated
+Also note the introduction of the partition test. Turns out the library call is more
+expensive than quickSortST w/ pattern matching and guards
+
+
+[/5playpen/t-mmole/internship/benchmarks]
+[14:16] t-mmole@cam-05-unx:./quickSortCriterion
+warming up
+estimating clock resolution...
+mean is 2.469398 us (320001 iterations)
+found 2009 outliers among 319999 samples (0.6%)
+  1992 (0.6%) high severe
+estimating cost of a clock call...
+mean is 116.9047 ns (14 iterations)
+
+benchmarking quickSort/qs single 1000
+mean: 1.173153 ms, lb 1.156995 ms, ub 1.196773 ms, ci 0.950
+std dev: 99.01212 us, lb 72.32335 us, ub 130.6672 us, ci 0.950
+found 6 outliers among 100 samples (6.0%)
+  6 (6.0%) high severe
+variance introduced by outliers: 72.799%
+variance is severely inflated by outliers
+
+benchmarking quickSort/qs single 10000
+collecting 100 samples, 1 iterations each, in estimated 5.053210 s
+mean: 20.02295 ms, lb 19.89028 ms, ub 20.17661 ms, ci 0.950
+std dev: 730.9413 us, lb 641.4240 us, ub 829.1252 us, ci 0.950
+found 1 outliers among 100 samples (1.0%)
+variance introduced by outliers: 32.645%
+variance is moderately inflated by outliers
+
+benchmarking quickSort/qs dual 1000
+mean: 1.514757 ms, lb 1.498036 ms, ub 1.542733 ms, ci 0.950
+std dev: 107.8815 us, lb 66.13812 us, ub 148.1342 us, ci 0.950
+found 6 outliers among 100 samples (6.0%)
+  6 (6.0%) high severe
+variance introduced by outliers: 65.617%
+variance is severely inflated by outliers
+
+benchmarking quickSort/qs dual 10000
+mean: 25.57194 ms, lb 25.44825 ms, ub 25.69054 ms, ci 0.950
+std dev: 623.5705 us, lb 560.1289 us, ub 696.8218 us, ci 0.950
+variance introduced by outliers: 18.051%
+variance is moderately inflated by outliers
+
+benchmarking quickSort/qs part 1000
+mean: 2.086247 ms, lb 2.045908 ms, ub 2.133582 ms, ci 0.950
+std dev: 224.3560 us, lb 195.7765 us, ub 247.0548 us, ci 0.950
+found 24 outliers among 100 samples (24.0%)
+  24 (24.0%) high severe
+variance introduced by outliers: 82.069%
+variance is severely inflated by outliers
+
+benchmarking quickSort/qs part 10000
+mean: 34.73364 ms, lb 34.67194 ms, ub 34.80497 ms, ci 0.950
+std dev: 339.6394 us, lb 295.1146 us, ub 386.7946 us, ci 0.950
+

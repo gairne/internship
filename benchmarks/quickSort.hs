@@ -16,6 +16,8 @@ quickSortST [] = []
 quickSortST (p:xs) = quickSortST (fst split) ++ [p] ++ quickSortST (snd split)
   where
   split = partition (<p) xs
+-- partition is known to be slower then pattern matching and guards. See quickSortCriterion for
+-- a more updated version
 
 main = do
     seed <- newStdGen
