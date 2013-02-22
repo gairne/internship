@@ -1,7 +1,7 @@
 {-# LANGUAGE ParallelArrays #-}
 {-# OPTIONS -fvectorise #-}
 
-module MSTDPH (kruskalPA) where
+module MstDph (kruskalPA) where
 
 import Data.Array.Parallel as P
 import Data.Array.Parallel.Prelude.Int as I
@@ -15,6 +15,9 @@ type Graph = [:Edge:]
 -- Find the sub MST that a node is in or [] if not
 nodeInMSTs :: [:Graph:] -> Node -> Graph
 nodeInMSTs msts n = concatP (mapP (\mst -> if (nodeInMST n mst) then mst else emptyP) msts)
+
+isNodeInMSTs :: [:Graph:] -> Node -> Bool
+isNodeInMSTs msts n = andP (mapP (nodeInMST n) msts)
 
 nodeInMST :: Node -> Graph -> Bool
 nodeInMST n es = orP (mapP (\e@(n1, n2) -> n I.== n1 B.|| n I.== n2) es)
@@ -46,11 +49,13 @@ kruskalPA ps = toPArrayP (concatP (kruskal (fromPArrayP ps) emptyP))
 kruskal :: [:Edge:] -> [:Graph:] -> [:Graph:]
 kruskal es msts
   | lengthP es I.== 0 = msts
+  | lengthP es I.== 1 = kruskal' msts (es !: 0)
+  | lengthP es I.== 2 = kruskal (singletonP (es !: 1)) (kruskal' msts (es !: 0))
   | otherwise = kruskal (sliceP 1 (lengthP es I.- 1) es) (kruskal' msts (es !: 0))
 
----- The main logic. Check the status of the two nodes in an edge and act on the MSTs accordingly.
+-- The main logic. Check the status of the two nodes in an edge and act on the MSTs accordingly.
 kruskal' :: [:Graph:] -> Edge -> [:Graph:]
-kruskal' msts e@(n1,n2)
+kruskal' msts e@(n1, n2)
 --  -- Both Nodes do not exist in any of the MST subtrees. Therefore create a new subtree
   | lengthP leftNodeMST I.== 0 && lengthP rightNodeMST I.== 0 = (singletonP (singletonP e)) +:+ msts
 --  -- One node exists in a subtree but not the other. Add the other node to the subtree

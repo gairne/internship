@@ -1,7 +1,4 @@
-import MSTDPH
-import Criterion.Main
---import Randomish
---import Data.Vector.Unboxed as VU
+import MstDph
 import Data.Array.Parallel
 import Data.Array.Parallel.PArray as PA hiding (nf)
 
