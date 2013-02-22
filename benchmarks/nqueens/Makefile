@@ -1,6 +1,6 @@
 GHC=~/ghcSrc/bin/ghc
 
-HSSRC = Main.hs NqueensPA.hs NqueensList.hs
+HSSRC = Main.hs NqueensDPH.hs NqueensList.hs
 
 GHC_FLAGS+=-odir obj -hidir obj
 GHC_FLAGS+=-threaded -Odph -rtsopts
