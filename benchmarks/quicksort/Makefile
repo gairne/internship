@@ -1,21 +1,21 @@
 GHC=ghc
 
-HSSRC = Main.hs NqueensDPH.hs NqueensList.hs
+HSSRC=*.hs
 
 GHC_FLAGS+=-odir obj -hidir obj
 GHC_FLAGS+=-threaded -Odph -rtsopts
 #GHC_FLAGS+=-eventlog
-GHC_FLAGS+=-O3
+GHC_FLAGS+=-O2
 #GHC_FLAGS+= \
 	-package dph-lifted-vseg-0.6.1.2
+GHC_FLAGS+=-i../lib/
 
 .PHONY : all
-all : nq
+all : $(HSSRC)
+	$(GHC) $(GHC_FLAGS) --make $< -o Main
 
 .PHONY : clean
 clean :
-	rm -rf obj nq
+	rm -rf obj Main
 
-nq : $(HSSRC)
-	$(GHC) $(GHC_FLAGS) --make $< -o $@
 
