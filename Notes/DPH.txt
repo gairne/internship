@@ -98,3 +98,44 @@ blah e@(n1, n2) = f n2
 Int == Int becomes 
 import Data.Array.Parallel.Prelude.Int as I
 Int I.== Int
+
+*** Vectorisation error ***
+    Variable not vectorised: GHC.Classes.eqInt
+
+Check every ==. Including in pattern matching guards
+
+12) n-patterns not supported
+
+queensW :: Int -> ...
+queensW 0 = 
+queensW 1 =
+queensW n =
+results in 
+exprType TYPE main:NQDPH.Solution{tc r32m}
+*** Vectorisation error ***
+    Can't vectorise expression GHC.Prim.Int#
+
+solution is to use guards
+queensW n | n == 0 =
+          | n == 1 =
+          | otherwise = 
+
+13) List Comphrensions seem to result in crossMapP not implemented
+
+f :: [:Int:] -> [:Int:] -> [:Int:]
+f as bs = [: a I.+ b | a <- as, b <- bs :]
+-- crossMapP not implemented
+
+g :: [:Int:] -> [:Int:] -> [:Int:]
+g as bs = [: a I.+ b | a <- as | b <- bs :]
+-- parallel list comprehension works but is not the same as f or h
+
+h :: [:Int:] -> [:Int:] -> [:Int:]
+h as bs = concatP [: [: a I.+ b | b <- bs :] | a <- as :]
+-- works
+
+14) No Trace or TraceShow
+
+*** Vectorisation error ***
+    Variable not vectorised: Debug.Trace.traceShow
+
