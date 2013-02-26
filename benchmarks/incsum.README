@@ -1,6 +1,0 @@
-Compiling:
-ghc -o incsum -threaded -Odph -rtsopts -eventlog -O --make incsumDPH.hs incsumRepa.hs incsum.hs
-
-Executing:
-./incsum +RTS -N5 -ls
-
