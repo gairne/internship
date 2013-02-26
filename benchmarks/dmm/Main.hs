@@ -1,55 +1,50 @@
+{-# LANGUAGE PackageImports #-}
 
-import Timing
 import Randomish
-import System.Environment
 import Data.Array.Parallel	as P
-import Data.Array.Parallel.PArray	as P hiding (length)
+import Data.Array.Parallel.PArray	as P hiding (nf, length)
 import qualified Data.Vector.Unboxed	as V
 import qualified Vector	                as V
 import qualified Vectorised	        as Z
---import qualified Repa                   as M
---import qualified Data.Array.Repa as R
---import qualified Data.Array.Repa.Repr.Unboxed as RU
+import qualified Repa                   as M
+import qualified Data.Array.Repa as R
+import qualified Data.Array.Repa.Repr.Unboxed as RU
 
-main :: IO ()
-main 
- = do	args	<- getArgs
-	case args of
-	  [alg, len] 	-> run alg (read len) 
-	  _		-> usage
+import Criterion.Main
+import Criterion.Config
+import qualified Control.Exception as E
 
-usage
- = putStr $ unlines
- 	[ "usage: dotp <alg> <length>"
- 	, "  alg one of " ++ show ["vectorised", "vector", "repa"] ]
-	
-run alg len
- = do	let vec1 = randomishDoubles len 0 1 1234
-	let vec2 = randomishDoubles len 0 1 12345
+sIZE :: Int
+sIZE = 1000000
 
-	(result, tElapsed) <- runAlg alg vec1 vec2
+sEED1 :: Int
+sEED1 = 12345
+sEED2 :: Int
+sEED2 = 54329
 
-	putStr	$ prettyTime tElapsed
-	putStr	$ (take 12 $ show result) ++ "\n"
-
-runAlg "vectorised" vec1 vec2 
- = do	let arr1 = P.fromUArray vec1
-	let arr2 = P.fromUArray vec2
-	arr1 `seq` arr2 `seq` return ()
-
-	time	$ let result	= Z.dotPA arr1 arr2
-		  in  result `seq` return result
-
-runAlg "vector" vec1 vec2
- = do	vec1 `seq` vec2 `seq` return ()
-
-	time	$ let result	= V.dotV vec1 vec2 
-		  in  result `seq` return result
-		
---runAlg "repa" vec1 vec2
--- = do   let arr1 = RU.fromUnboxed (R.ix1 (length vec1)) vec1
---        let arr2 = RU.fromUnboxed (R.ix1 (length vec2)) vec2
---        arr1 `seq` arr2 `seq` return ()
---        time    $ let result    = M.dotR arr1 arr2
---                  in result `seq` return result
-
+main = do 
+  let vec1 :: V.Vector Double
+      vec1 = randomishDoubles sIZE 0 1 sEED1
+      vec2 :: V.Vector Double
+      vec2 = randomishDoubles sIZE 0 1 sEED2
+      dph1 :: P.PArray Double
+      dph1 = P.fromList (V.toList vec1)
+      dph2 :: P.PArray Double
+      dph2 = P.fromList (V.toList vec2)
+      rep1 :: R.Array R.U R.DIM1 Double
+      rep1 = RU.fromListUnboxed (R.ix1 (V.length vec1)) (V.toList vec1)
+      rep2 :: R.Array R.U R.DIM1 Double
+      rep2 = RU.fromListUnboxed (R.ix1 (V.length vec2)) (V.toList vec2)
+  -- Force to whnf
+  E.evaluate vec1
+  E.evaluate vec2
+  E.evaluate dph1
+  E.evaluate dph2
+  E.evaluate rep1
+  E.evaluate rep2
+  defaultMainWith defaultConfig (return ()) [
+      bgroup "DMM"
+        [ bench "dmmDPH" $ nf (Z.dotPA dph1) dph2,
+          bench "dmmRepa" $ nf (M.dotR rep1) rep2
+        ]
+    ]

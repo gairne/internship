@@ -1,6 +1,6 @@
 GHC=ghc
 
-HSSRC = Main.hs
+HSSRC = MainBatch.hs
 
 GHC_FLAGS+=-odir obj -hidir obj
 GHC_FLAGS+=-threaded -Odph -rtsopts

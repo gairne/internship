@@ -22,12 +22,12 @@ queens row cols solutions
   | otherwise = queens (row-1) cols [[(row, col)] ++ solution | col <- [0..cols], solution <- solutions, correct row col solution]
 
 queensW :: Int -> Solutions
-queensW n | n I.== 0    = []
-          | n I.== 1    = [[(0,0)]]
-          | n I.== 2    = []
-          | n I.== 3    = []
-          | otherwise = queensListComprehension (n-1) (n-1) [[(0, c)] | c <- [0..(n-1)]]
+queensW n | n == 0    = []
+          | n == 1    = [[(0,0)]]
+          | n == 2    = []
+          | n == 3    = []
+          | otherwise = queens (n-1) (n-1) [[(0, c)] | c <- [0..(n-1)]]
 
 nqList :: Int -> Int
-nqList i = lengthP (queensW i)
+nqList i = length (queensW i)
 

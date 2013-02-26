@@ -33,7 +33,7 @@ queensW n | n I.== 0    = emptyP
           | n I.== 1    = [:[:(0,0):]:]
           | n I.== 2    = emptyP
           | n I.== 3    = emptyP
-          | otherwise = queensListComprehension (n I.- 1) (n I.- 1) [: [:(0, c):] | c <- I.enumFromToP 0 (n I.- 1) :]
+          | otherwise = queens (n I.- 1) (n I.- 1) [: [:(0, c):] | c <- I.enumFromToP 0 (n I.- 1) :]
 
 nqPA :: Int -> Int
 nqPA i = lengthP (queensW i)

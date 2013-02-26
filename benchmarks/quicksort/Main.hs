@@ -1,50 +1,37 @@
-
-import Vectorised
-import Timing
 import Randomish
-import System.Environment
+import Vectorised as Z
 import Data.Vector.Unboxed		(Vector)
 import Data.Array.Parallel	as P
-import Data.Array.Parallel.PArray	as P
+import Data.Array.Parallel.PArray	as P hiding (nf)
 import qualified Data.Vector.Unboxed	as V
-import Data.Maybe
+import Data.Array.Repa as R
+import Data.Array.Repa.Repr.Unboxed as RU
+import Repa as M
 
-main :: IO ()
-main 
- = do	args	<- getArgs
-	case args of
-	  [len]	-> run (read len) 
-	  _	-> putStr usage
+import Criterion.Main
+import Criterion.Config
+import qualified Control.Exception as E
 
+sIZE :: Int
+sIZE = 100000
 
--- | Command line usage information.
-usage :: String
-usage	= unlines
-	[ "Usage: quicksort <length>" ]
+sEED1 :: Int
+sEED1 = 12345
 
-
--- | Run the benchmark.
-run :: Int -> IO ()
-run len
- = do	-- Create the input vector
-	let vInts 	= fromUArray
-			$ randomishDoubles len 0 1 1234
-
-	vInts `seq` return ()
-
-	-- Compute the convex hull.
-	(vSorted, tElapsed)
-		<- time 
-		$  let 	vSorted	= quicksortPA vInts
-		   in	vSorted `seq` return vSorted
-					
-	-- Print how long it took.
-	putStr $ prettyTime tElapsed
-	
-	-- Check they're really sorted.
-	print	$ isSorted $ P.toUArray vSorted
-	
-
--- | Check if a vector is sorted (monotonically increasing)
-isSorted :: Vector Double -> Bool
-isSorted = isJust . V.fold1M (\x y -> if y >= x then Just y else Nothing)
+main = do
+  let vec1 :: V.Vector Double
+      vec1 = randomishDoubles sIZE 0 1 sEED1
+      dph1 :: P.PArray Double
+      dph1 = P.fromList (V.toList vec1)
+      rep1 :: R.Array R.U R.DIM1 Double
+      rep1 = RU.fromListUnboxed (R.ix1 (V.length vec1)) (V.toList vec1)
+  -- Force to whnf
+  E.evaluate vec1
+  E.evaluate dph1
+  E.evaluate rep1
+  defaultMainWith defaultConfig (return ()) [
+      bgroup "QuickSort"
+        [ bench "qsDPH" $ nf P.length(Z.quicksortPA dph1),
+          bench "qsRepa" $ nf size(extent (M.quicksortR rep1))
+        ]
+    ]

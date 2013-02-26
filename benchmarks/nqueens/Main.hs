@@ -1,6 +1,7 @@
 import NqueensDPH
 import NqueensList
 import Criterion.Main
+import Criterion.Config
 import Data.Array.Parallel
 
 main = defaultMainWith defaultConfig (return ()) [
