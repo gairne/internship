@@ -1,0 +1,36 @@
+dmm:
+
+Multiply two arrays and add all elements together
+Repa and DPH working
+
+mst:
+
+Kruskal's minimum spanning tree algorithm.
+DPH only. Segmentation faults
+
+NBody:
+
+Barnes-Hut algorithm.
+DPH version works. Repa version partly implemented.
+Lacking a filter and (nested) list comprehension parallelism.
+
+nqueens:
+
+Nqueens problem.
+DPH version works but with newest versions of dph.
+No repa version because the algorithm is heavy on the nested list comprehension
+
+quickhull:
+
+Hull Convex, a divide and conquer algorithm.
+DPH works. Repa is partly implemented but requires nested parallelism
+
+quicksort:
+
+Divide and Conquer sorting
+DPH occassionally (more often then not) gets index out of bounds exceptions
+
+smvm
+
+Sparse Matrix multiplication with a vector
+Currently not working because of type failures.
