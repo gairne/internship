@@ -1,0 +1,8 @@
+"problem_name" : "dmmDph",
+"input" : "Run2",
+  { "n_procs" : 1,   "time_sec" : 0.279,   "gc" : []},
+  { "n_procs" : 2,   "time_sec" : 0.165,   "gc" : []},
+  { "n_procs" : 4,   "time_sec" : 0.096,   "gc" : []},
+  { "n_procs" : 8,   "time_sec" : 0.059,   "gc" : []},
+  { "n_procs" : 12,   "time_sec" : 0.062,   "gc" : []},
+  { "n_procs" : 16,   "time_sec" : 0.058,   "gc" : []},

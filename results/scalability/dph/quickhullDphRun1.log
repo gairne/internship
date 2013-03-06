@@ -1,0 +1,8 @@
+"problem_name" : "quickhullDph",
+"input" : "Run1",
+  { "n_procs" : 1,   "time_sec" : 2.021,   "gc" : []},
+  { "n_procs" : 2,   "time_sec" : 1.268,   "gc" : []},
+  { "n_procs" : 4,   "time_sec" : 0.865,   "gc" : []},
+  { "n_procs" : 8,   "time_sec" : 0.695,   "gc" : []},
+  { "n_procs" : 12,   "time_sec" : 0.788,   "gc" : []},
+  { "n_procs" : 16,   "time_sec" : 0.789,   "gc" : []},

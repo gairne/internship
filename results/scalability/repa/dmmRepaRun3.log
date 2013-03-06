@@ -1,0 +1,8 @@
+"problem_name" : "dmmRepa",
+"input" : "Run3",
+  { "n_procs" : 1,   "time_sec" : 0.107,   "gc" : []},
+  { "n_procs" : 2,   "time_sec" : 0.059,   "gc" : []},
+  { "n_procs" : 4,   "time_sec" : 0.033,   "gc" : []},
+  { "n_procs" : 8,   "time_sec" : 0.017,   "gc" : []},
+  { "n_procs" : 12,   "time_sec" : 0.013,   "gc" : []},
+  { "n_procs" : 16,   "time_sec" : 0.024,   "gc" : []},

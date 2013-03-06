@@ -1,0 +1,3 @@
+"problem_name" : "nqueensDph",
+"input" : "SEQ",
+  { "n_procs" : 0,   "time_sec" : 86.686,   "gc" : []},

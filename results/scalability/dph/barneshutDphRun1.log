@@ -1,0 +1,8 @@
+"problem_name" : "barneshutDph",
+"input" : "Run1",
+  { "n_procs" : 1,   "time_sec" : 58.265,   "gc" : []},
+  { "n_procs" : 2,   "time_sec" : 50.888,   "gc" : []},
+  { "n_procs" : 4,   "time_sec" : 49.666,   "gc" : []},
+  { "n_procs" : 8,   "time_sec" : 52.144,   "gc" : []},
+  { "n_procs" : 12,   "time_sec" : 57.471,   "gc" : []},
+  { "n_procs" : 16,   "time_sec" : 63.694,   "gc" : []},

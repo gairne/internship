@@ -1,0 +1,8 @@
+"problem_name" : "nqueensDph",
+"input" : "Run1",
+  { "n_procs" : 1,   "time_sec" : 86.189,   "gc" : []},
+  { "n_procs" : 2,   "time_sec" : 58.639,   "gc" : []},
+  { "n_procs" : 4,   "time_sec" : 39.58,   "gc" : []},
+  { "n_procs" : 8,   "time_sec" : 30.952,   "gc" : []},
+  { "n_procs" : 12,   "time_sec" : 29.4,   "gc" : []},
+  { "n_procs" : 16,   "time_sec" : 29.167,   "gc" : []},
