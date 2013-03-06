@@ -7,6 +7,7 @@ import qualified Data.Vector.Unboxed	as V
 import Data.Array.Repa as R
 import Data.Array.Repa.Repr.Unboxed as RU
 import Repa as M
+import qualified Data.Array.Parallel.PArray.Scalar as PS
 
 import Criterion.Main
 import Criterion.Config
@@ -22,9 +23,9 @@ main = do
   let vec1 :: V.Vector Double
       vec1 = randomishDoubles sIZE 0 1 sEED1
       dph1 :: P.PArray Double
-      dph1 = P.fromList (V.toList vec1)
+      dph1 = PS.fromUArray vec1
       rep1 :: R.Array R.U R.DIM1 Double
-      rep1 = RU.fromListUnboxed (R.ix1 (V.length vec1)) (V.toList vec1)
+      rep1 = RU.fromListUnboxed (R.ix1 (V.length vec1)) (V.toList vec1) --THIS IS LIKELY TO BE SLOW
   -- Force to whnf
   E.evaluate vec1
   E.evaluate dph1

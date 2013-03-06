@@ -9,6 +9,8 @@ import qualified Vectorised	        as Z
 import qualified Repa                   as M
 import qualified Data.Array.Repa as R
 import qualified Data.Array.Repa.Repr.Unboxed as RU
+import qualified Data.Array.Parallel.Unlifted as PU
+import qualified Data.Array.Parallel.PArray.Scalar as PS
 
 import Criterion.Main
 import Criterion.Config
@@ -28,13 +30,13 @@ main = do
       vec2 :: V.Vector Double
       vec2 = randomishDoubles sIZE 0 1 sEED2
       dph1 :: P.PArray Double
-      dph1 = P.fromList (V.toList vec1)
+      dph1 = PS.fromUArray vec1
       dph2 :: P.PArray Double
-      dph2 = P.fromList (V.toList vec2)
+      dph2 = PS.fromUArray vec2
       rep1 :: R.Array R.U R.DIM1 Double
-      rep1 = RU.fromListUnboxed (R.ix1 (V.length vec1)) (V.toList vec1)
+      rep1 = RU.fromListUnboxed (R.ix1 (V.length vec1)) (V.toList vec1) --FIND ANOTHER FUNCTION!
       rep2 :: R.Array R.U R.DIM1 Double
-      rep2 = RU.fromListUnboxed (R.ix1 (V.length vec2)) (V.toList vec2)
+      rep2 = RU.fromListUnboxed (R.ix1 (V.length vec2)) (V.toList vec2) --THIS IS SLOW!
   -- Force to whnf
   E.evaluate vec1
   E.evaluate vec2
