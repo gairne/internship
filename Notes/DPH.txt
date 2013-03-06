@@ -139,3 +139,34 @@ h as bs = concatP [: [: a I.+ b | b <- bs :] | a <- as :]
 *** Vectorisation error ***
     Variable not vectorised: Debug.Trace.traceShow
 
+15) Type Aliases
+NB: OK, this seems to be a bug in DPH 0.6 as this doesn't happen in DPH 0.8
+
+Vector in Data.Vector is NOT THE SAME as Vector in Data.Array.Parallel.Unlifted.Sequential.Vector. The naming is unfortunate.
+
+The following error message was not complaining about a differing version of Data.Vector
+like I originally thought, but of the fact they are differing data structures.
+
+    Couldn't match expected type `PU.Array a0'
+                with actual type `vector-0.9.1:Data.Vector.Vector a1'
+
+Incidently, Array is an alias to Data.Array.Para.....Vector
+
+toVector :: PA a => PArray a -> Vector a
+
+won't work if you try and hGet
+
+hGet IOElt a => Handle -> Array a -> IO ()
+type Array = Data.Array.Parallel.Unlifted.Sequential.Vector.Vector
+
+instead:
+
+toUArray :: Scalar a => PArray a -> Array a
+
+16) Vector -> PArray requires consideration.
+Similar to (15). This won't work on DPH 0.6
+
+Performance is poor if you use Data.Array.Parallel.PArray.fromList (Data.Vector.Unboxed.toList someVector)
+Instead use Data.Array.Parallel.PArray.Scalar.fromUArray someVector
+
+Went from slowdown to a speedup.
