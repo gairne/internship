@@ -1,7 +1,10 @@
-import DPH
-import Point
-import Criterion.Main
+import Timing
+import System.Environment
 import Randomish
+
+import Point
+import DPH
+
 import Data.Vector.Unboxed as VU
 import Data.Array.Parallel
 import Data.Array.Parallel.PArray as PA hiding (nf)
@@ -24,14 +27,19 @@ seed1 = 23541
 seed2 :: Int
 seed2 = 46145
 
-nPoints :: Int
-nPoints = 10000
+main :: IO ()
+main
+  = do args <- getArgs
+       case args of
+         [n] -> run (read n)
+         _   -> putStr $ "usage: $0 <size>"
 
-test :: [Point]
-test = [(1.0, 0.0), (0.0, 3.0), (3.0, 2.0), (4.0,3.0), (7.0, 4.0), (8.0, 2.0), (10.0, 4.0), (8.0,5.0)]
 
-main =
-    let points = VU.zip (randomishDoubles nPoints xMin xMax seed1) (randomishDoubles nPoints yMin yMax seed2)
-    in  putStrLn (show (quickHullPA (PS.fromUArray points)))
-    --let points = VU.zip (randomishDoubles 1000 0.0 100.0 24156) (randomishDoubles 1000 0.0 100.0 61252)
-    --in  putStrLn (show (quickHullPA (PA.fromList points)))
+
+run nPoints
+  = do let points = PS.fromUArray2 (VU.zip (randomishDoubles nPoints xMin xMax seed1) (randomishDoubles nPoints yMin yMax seed2))
+       points `seq` return ()
+       (result, tme) <- time $ let result = quickHullPA points in result `seq` return result      
+
+       putStr $ prettyTime tme
+

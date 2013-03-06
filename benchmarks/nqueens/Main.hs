@@ -1,12 +1,14 @@
 import NqueensDPH
-import NqueensList
-import Criterion.Main
-import Criterion.Config
-import Data.Array.Parallel
+import Timing
+import System.Environment
 
-main = defaultMainWith defaultConfig (return ()) [
-         bgroup "nq"
-           [ bench "nqDPH 1mil" $ whnf nqPA 12,
-             bench "nq 1mil" $ whnf nqList 12
-           ]
-       ]
+main :: IO ()
+main
+  = do args <- getArgs
+       case args of
+         [n] -> run (read n)
+         _   -> putStr $ "usage: $0 <size>"
+
+run n = do (result, tme) <- time $ let result = (nqPA n) in result `seq` return result
+           putStr $ prettyTime tme
+
