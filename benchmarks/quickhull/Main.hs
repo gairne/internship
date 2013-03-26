@@ -12,7 +12,7 @@ import Data.Array.Parallel.PArray.Scalar as PS
 import Data.Array.Repa as R
 import Data.Array.Repa.Repr.Unboxed as RU
 
-import Vectorised
+import DPH
 import Repa
 
 xMin :: Double
@@ -29,6 +29,7 @@ yMax = 1000.0
 
 seed1 :: Int
 seed1 = 23541
+
 seed2 :: Int
 seed2 = 46145
 
@@ -36,14 +37,16 @@ main :: IO ()
 main
   = do args <- getArgs
        case args of
-         [alg, n] -> run alg (read n)
-         _   -> putStr $ "usage: $0 <alg> <size>"
+         [alg, len] -> run alg (read len)
+         _   -> putStr $ unlines
+                         [ "usage: $0 <alg> <length>"
+                         , "  alg one of " Prelude.++ show ["dph", "repa"] ]
 
-run alg nPoints
+run alg len
   = do let vec1 :: VU.Vector Double
-           vec1 = randomishDoubles nPoints xMin xMax seed1
+           vec1 = randomishDoubles len xMin xMax seed1
            vec2 :: VU.Vector Double
-           vec2 = randomishDoubles nPoints yMin yMax seed2
+           vec2 = randomishDoubles len yMin yMax seed2
        
        (result, tme) <- runAlg alg vec1 vec2
        putStr $ prettyTime tme

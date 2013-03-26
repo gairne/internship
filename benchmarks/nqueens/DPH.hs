@@ -1,7 +1,7 @@
 {-# LANGUAGE ParallelArrays #-}
 {-# OPTIONS -fvectorise #-}
 
-module NqueensDPH (nqPA) where
+module DPH (nqPA) where
 
 import Data.Array.Parallel
 import qualified Data.Array.Parallel.Prelude.Bool as B
