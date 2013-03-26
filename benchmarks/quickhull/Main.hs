@@ -4,11 +4,15 @@ import Randomish
 
 import Point
 import DPH
+import Repa
 
 import Data.Vector.Unboxed as VU
 import Data.Array.Parallel
 import Data.Array.Parallel.PArray as PA hiding (nf)
 import qualified Data.Array.Parallel.PArray.Scalar as PS
+
+import Data.Array.Repa as R
+import Data.Array.Repa.Repr.Unboxed as RU
 
 xMin :: Double
 xMin = 0.0
@@ -31,15 +35,26 @@ main :: IO ()
 main
   = do args <- getArgs
        case args of
-         [n] -> run (read n)
-         _   -> putStr $ "usage: $0 <size>"
+         [alg, n] -> run alg (read n)
+         _   -> putStr $ "usage: $0 <alg> <size>"
 
-
-
-run nPoints
-  = do let points = PS.fromUArray2 (VU.zip (randomishDoubles nPoints xMin xMax seed1) (randomishDoubles nPoints yMin yMax seed2))
-       points `seq` return ()
-       (result, tme) <- time $ let result = quickHullPA points in result `seq` return result      
-
+run alg nPoints
+  = do let vec1 :: VU.Vector Double
+           vec1 = randomishDoubles nPoints xMin xMax seed1
+           vec2 :: VU.Vector Double
+           vec2 = randomishDoubles nPoints yMin yMax seed2
+       
+       (result, tme) <- runAlg alg vec1 vec2 nPoints
        putStr $ prettyTime tme
+
+runAlg "dph" vec1 vec2 n
+  = do let dph1 = PS.fromUArray2 (VU.zip vec1 vec2)
+       dph1 `seq` return ()
+       time $ let result = quickHullPA dph1 in result `seq` return ()
+
+runAlg "repa" vec1 vec2 n
+  = do let rep1 = RU.fromUnboxed (R.ix1 n) (VU.zip vec1 vec2)
+       rep1 `seq` return ()
+       time $ let result = quickHullR rep1 in ((size (extent result))) `seq` return ()
+
 
