@@ -1,38 +1,44 @@
+import Timing
 import Randomish
-import Vectorised as Z
-import Data.Vector.Unboxed		(Vector)
-import Data.Array.Parallel	as P
-import Data.Array.Parallel.PArray	as P hiding (nf)
-import qualified Data.Vector.Unboxed	as V
+import System.Environment
+
+import Data.Vector.Unboxed as VU
+
+import Data.Array.Parallel
+import Data.Array.Parallel.PArray as PA hiding (nf)
+import Data.Array.Parallel.PArray.Scalar as PS
+
 import Data.Array.Repa as R
 import Data.Array.Repa.Repr.Unboxed as RU
-import Repa as M
-import qualified Data.Array.Parallel.PArray.Scalar as PS
 
-import Criterion.Main
-import Criterion.Config
-import qualified Control.Exception as E
+import Vectorised
+import Repa
 
-sIZE :: Int
-sIZE = 100000
+--import qualified Control.Exception as E
 
 sEED1 :: Int
 sEED1 = 12345
 
-main = do
-  let vec1 :: V.Vector Double
-      vec1 = randomishDoubles sIZE 0 1 sEED1
-      dph1 :: P.PArray Double
-      dph1 = PS.fromUArray vec1
-      rep1 :: R.Array R.U R.DIM1 Double
-      rep1 = RU.fromListUnboxed (R.ix1 (V.length vec1)) (V.toList vec1) --THIS IS LIKELY TO BE SLOW
-  -- Force to whnf
-  E.evaluate vec1
-  E.evaluate dph1
-  E.evaluate rep1
-  defaultMainWith defaultConfig (return ()) [
-      bgroup "QuickSort"
-        [ bench "qsDPH" $ nf P.length(Z.quicksortPA dph1),
-          bench "qsRepa" $ nf size(extent (M.quicksortR rep1))
-        ]
-    ]
+main :: IO ()
+main
+  = do args <- getArgs
+       case args of
+         [alg, n] -> run alg (read n)
+         _   -> putStr $ "usage: $0 <alg> <size>"
+
+run alg nPoints
+  = do let vec1 :: VU.Vector Double
+           vec1 = randomishDoubles nPoints 0 1 sEED1
+
+       (result, tme) <- runAlg alg vec1
+       putStr $ prettyTime tme
+
+runAlg "dph" vec1
+  = do let dph1 = PS.fromUArray vec1
+       dph1 `seq` return ()
+       time $ let result = quicksortPA dph1 in result `seq` return ()
+
+runAlg "repa" vec1
+  = do let rep1 = RU.fromUnboxed (R.ix1 (VU.length vec1)) vec1
+       rep1 `seq` return ()
+       time $ let result = quicksortR rep1 in result `seq` return ()
