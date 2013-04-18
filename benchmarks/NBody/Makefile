@@ -9,6 +9,7 @@ GHC_FLAGS+=-O2
 #GHC_FLAGS+= \
 	-package dph-lifted-vseg-0.6.1.2
 GHC_FLAGS+=-i../lib
+GHC_FLAGS+=-package repa-ropes-3.2.3.1 -hide-package repa-experimental-3.2.3.1 -hide-package repa-3.2.3.1 
 
 .PHONY : all
 all : Main

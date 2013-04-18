@@ -14,7 +14,7 @@ import Data.Array.Repa.Repr.Unboxed as RU
 import DPH
 import Repa
 
---import qualified Control.Exception as E
+import qualified Control.Exception as E
 
 sEED1 :: Int
 sEED1 = 12345
