@@ -11,7 +11,8 @@ DPH only. Segmentation faults
 NBody:
 
 Barnes-Hut algorithm.
-DPH version works. Repa version partly implemented.
+Inefficient according to http://hackage.haskell.org/trac/ghc/wiki/DataParallel/BenchmarkStatus
+DPH version works. Repa version implemented using Lazy Tree Splitting.
 Lacking a filter and (nested) list comprehension parallelism.
 
 nqueens:
@@ -23,7 +24,8 @@ No repa version because the algorithm is heavy on the nested list comprehension
 quickhull:
 
 Hull Convex, a divide and conquer algorithm.
-DPH works. Repa is partly implemented but requires nested parallelism
+DPH works. Repa works but requires a nested scheduler of kinds.
+The Repa version works with the monad-par Repa scheduler. Current plans are to port it to lazy tree splitting.
 
 quicksort:
 

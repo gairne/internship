@@ -1,0 +1,25 @@
+crossMapP: not implemented
+(Using version 0.6.1.2 but it appears in 0.7.0.1)
+
+This error appears in .../Lifted/Combinators.hs in crossMapPP
+
+crossMapPP is the lifted version of crossMapP
+
+find . -name "*" -exec grep -H "crossMapP" \{\} \; ;
+./Array/Parallel.hs:        , crossMapP
+./Array/Parallel.hs:crossMapP :: [:a:] -> (a -> [:b:]) -> [:(a, b):]
+./Array/Parallel.hs:{-# NOINLINE crossMapP #-}
+./Array/Parallel.hs:crossMapP !_ !_ = emptyP
+./Array/Parallel.hs:{-# VECTORISE crossMapP = crossMapPP #-}
+./Array/Parallel/Lifted/Combinators.hs:        , crossMapPP
+./Array/Parallel/Lifted/Combinators.hs:crossMapPP
+./Array/Parallel/Lifted/Combinators.hs:crossMapPP = closure2' crossMapPP_v crossMapPP_l
+./Array/Parallel/Lifted/Combinators.hs:        {-# INLINE crossMapPP_v #-}
+./Array/Parallel/Lifted/Combinators.hs:        crossMapPP_v _ _
+./Array/Parallel/Lifted/Combinators.hs:                = error "crossMapP: not implemented"
+./Array/Parallel/Lifted/Combinators.hs:        {-# INLINE crossMapPP_l #-}
+./Array/Parallel/Lifted/Combinators.hs:        crossMapPP_l _ _
+./Array/Parallel/Lifted/Combinators.hs:                = error "crossMapP: not implemented"
+./Array/Parallel/Lifted/Combinators.hs:{-# INLINE_PA crossMapPP #-}
+
+The fix is to use a later version of DPH where crossMapP is implemented.
