@@ -23,6 +23,8 @@ import qualified Solver.NestedBH.Solver		as SolverNB
 
 import Debug.Trace
 
+import System.IO.Unsafe
+
 type Solver	= Double -> V.Vector MassPoint -> V.Vector Accel
 
 solvers :: [(String, Solver)]
@@ -69,4 +71,4 @@ calcAccels_nb epsilon mpts
 calcAccels_r :: Solver
 calcAccels_r epsilon mpts
  = let x = R.fromRope (R.ix1 (V.length mpts)) $ RP.fromVector mpts
-   in trace (show x) $ RP.toVector $ R.toRope $ SolverR.calcAccels epsilon x  
+   in unsafePerformIO (R.setGlobalLeafSize 512) `seq` RP.toVector $ R.toRope $ SolverR.calcAccels epsilon x  

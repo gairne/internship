@@ -3,14 +3,18 @@
 import Randomish
 
 import Vectorised
---import Data.Array.Parallel
+import Data.Array.Parallel
 --import qualified Data.Vector                    as V
 --import qualified Vector                         as V
 import Control.Exception                        (evaluate)
 --import qualified Data.Vector.Unboxed            as U
 --import Data.Array.Parallel.PArray               as PA hiding (length)
 
+import Timing
+import System.IO
 import Repa
+
+
 
 percentElements = 0.25
 
@@ -28,3 +32,5 @@ sparseMatrix rows cols = (matrix, lengths matrix, indicies matrix)
     lengths matrix = map length matrix
  
 main = putStrLn(show (sparseMatrix 10 10))
+
+

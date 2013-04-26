@@ -27,4 +27,4 @@ run alg size
        putStr $ prettyTime tme
 
 runAlg "dph" size
-  = time $ let result = nqPA size in result `seq` return result
+  = time $ let result = nqPA size in result `seq` return result -- Evaluation wise, OK. Returns an Int
