@@ -1,10 +1,11 @@
 {-# LANGUAGE PackageImports #-}
 
+import Timing
 import Data.Array.Parallel
 import Data.Array.Parallel.PArray as PA hiding (nf)
 import qualified Control.Exception as E
-import Criterion.Main
-import Criterion.Config
+--import Criterion.Main
+--import Criterion.Config
 import qualified Data.Vector.Unboxed as U
 import qualified Data.Array.Repa as R
 import qualified Data.Array.Repa.Repr.Unboxed as RU
@@ -33,10 +34,12 @@ main = do
   E.evaluate v
   E.evaluate pa
   E.evaluate ra
-  defaultMainWith defaultConfig (return ()) [
-      bgroup "incsum"
-        [ bench "incsumSeq 1mil" $ nf incsum v,
-          bench "incsumPar 1mil" $ nf incsumDPH pa,
-          bench "incsumRep 1mil" $ nf incsumR ra
-        ]
-    ]
+  (x, tme) <- time $ let result = incsumR ra in result `seq` return result
+  putStr $ prettyTime tme
+--  defaultMainWith defaultConfig (return ()) [
+--      bgroup "incsum"
+--        [ bench "incsumSeq 1mil" $ nf incsum v,
+--          bench "incsumPar 1mil" $ nf incsumDPH pa,
+--          bench "incsumRep 1mil" $ nf incsumR ra
+--        ]
+--    ]

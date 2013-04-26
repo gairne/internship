@@ -12,9 +12,18 @@ import qualified Data.Vector.Unboxed		as V
 import qualified Solver.VectorBH.Solver		as SolverVB
 import qualified Solver.VectorNaive.Solver	as SolverVN
 
+import qualified Data.Array.Repa                as R
+import qualified Data.Array.Repa.Repr.LazyTreeSplitting as R
+import qualified Data.Rope.Rope                 as RP
+import qualified Solver.Repa.Solver             as SolverR
+
 import qualified Data.Array.Parallel	as P
 import qualified Data.Array.Parallel.PArray	as P
 import qualified Solver.NestedBH.Solver		as SolverNB
+
+import Debug.Trace
+
+import System.IO.Unsafe
 
 type Solver	= Double -> V.Vector MassPoint -> V.Vector Accel
 
@@ -23,7 +32,8 @@ solvers
  = 	[ ("list-bh",		calcAccels_lb)
 	, ("vector-naive",	calcAccels_vn)
 	, ("vector-bh",		calcAccels_vb)
-	, ("nested-bh",		calcAccels_nb) ]
+	, ("nested-bh",		calcAccels_nb)
+        , ("repa",              calcAccels_r ) ]
 
 
 -- | Lists + Barnes-Hut algorithm.
@@ -57,3 +67,8 @@ calcAccels_nb epsilon mpts
 	accels'	= SolverNB.calcAccelsWithBoxPA epsilon llx lly rux ruy mpts'
 	
    in	V.fromList $ P.toList accels'
+
+calcAccels_r :: Solver
+calcAccels_r epsilon mpts
+ = let x = R.fromRope (R.ix1 (V.length mpts)) $ RP.fromVector mpts
+   in unsafePerformIO (R.setGlobalLeafSize 512) `seq` RP.toVector $ R.toRope $ SolverR.calcAccels epsilon x  

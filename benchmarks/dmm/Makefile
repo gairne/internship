@@ -16,7 +16,7 @@ clean :
 	rm -rf obj Main Experimental
 
 Main : $(HSSRC)
-	$(GHC) $(GHC_FLAGS) -package repa-3.2.3.1 -hide-package repa-experimental-3.2.3.1 --make $< -o $@
+	$(GHC) $(GHC_FLAGS) -package repa-ropes-3.2.3.1 -hide-package repa-experimental-3.2.3.1 --make $< -o $@
 
 Experimental : $(HSSRC)
-	$(GHC) $(GHC_FLAGS) -package repa-experimental-3.2.3.1 -hide-package repa-3.2.3.1 --make $< -o $@
+	$(GHC) $(GHC_FLAGS) -package repa-experimental-3.2.3.1 -hide-package repa-ropes-3.2.3.1 --make $< -o $@

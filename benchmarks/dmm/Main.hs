@@ -15,7 +15,7 @@ import Vectorised
 import Repa
 import Vector
 
---import qualified Control.Exception as E
+import qualified Control.Exception as E
 
 sEED1 :: Int
 sEED1 = 12345
@@ -45,10 +45,14 @@ runAlg "dph" vec1 vec2
   = do let dph1 = PS.fromUArray vec1
            dph2 = PS.fromUArray vec2
        dph1 `seq` dph2 `seq` return ()
-       time $ let result = dotPA dph1 dph2 in result `seq` return result
+       E.evaluate dph1
+       E.evaluate dph2
+       time $ let result = dotPA dph1 dph2 in result `seq` return result -- Evaluation wise, OK. Returns a Double
 
 runAlg "repa" vec1 vec2
   = do let rep1 = RU.fromUnboxed (R.ix1 (VU.length vec1)) vec1
            rep2 = RU.fromUnboxed (R.ix1 (VU.length vec2)) vec2
        rep1 `seq` rep2 `seq` return ()
-       time $ let result = dotR rep1 rep2 in result `seq` return result
+       E.evaluate rep1
+       E.evaluate rep2
+       time $ let result = dotR rep1 rep2 in result `seq` return result -- Evaluation wise, OK. Returns a Double
